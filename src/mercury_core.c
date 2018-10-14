@@ -1116,9 +1116,17 @@ hg_core_init(const char *na_info_string, hg_bool_t na_listen,
             hg_core_class->na_ext_init = HG_TRUE;
         }
         hg_core_class->progress_mode = hg_init_info->na_init_info.progress_mode;
+
 #ifdef HG_HAS_SM_ROUTING
         auto_sm = hg_init_info->auto_sm;
+#elif
+        if (hg_init_info->auto_sm) {
+            HG_LOG_ERROR("Shared memory routing not supported. Please enable through CMake `-DMERCURY_USE_SM_ROUTING`");
+            ret = HG_PROTOCOL_ERROR;
+            goto done;
+        }
 #endif
+
 #ifdef HG_HAS_COLLECT_STATS
         hg_core_class->stats = hg_init_info->stats;
         if (hg_core_class->stats && !hg_core_print_stats_registered_g) {
