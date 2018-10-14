@@ -129,22 +129,19 @@ option(MERCURY_USE_SM_ROUTING
   "Enable routing of local communication through shared-memory (requires SM)."
   OFF)
 if(MERCURY_USE_SM_ROUTING)
-  find_package(UUID)
-  if(UUID_FOUND)
-    set(HG_HAS_SM_ROUTING 1)
-    set(MERCURY_EXT_INCLUDE_DEPENDENCIES
-      ${MERCURY_EXT_INCLUDE_DEPENDENCIES}
-      ${UUID_INCLUDE_DIRS}
+  find_package(UUID REQUIRED)
+  set(HG_HAS_SM_ROUTING 1)
+  set(MERCURY_EXT_INCLUDE_DEPENDENCIES
+    ${MERCURY_EXT_INCLUDE_DEPENDENCIES}
+    ${UUID_INCLUDE_DIRS}
     )
-    set(MERCURY_EXT_LIB_DEPENDENCIES
-      ${MERCURY_EXT_LIB_DEPENDENCIES}
-      ${UUID_LIBRARIES}
+  set(MERCURY_EXT_LIB_DEPENDENCIES
+    ${MERCURY_EXT_LIB_DEPENDENCIES}
+    ${UUID_LIBRARIES}
     )
-  endif()
-  if(MERCURY_USE_SM_ROUTING AND NOT NA_USE_SM)
-    # Always force SM if NA_USE_SM is turned OFF
-    set(NA_USE_SM "ON" CACHE BOOL "Use shared-memory plugin." FORCE)
-  endif()
+    if(NOT NA_USE_SM)
+        set(NA_USE_SM "ON" CACHE BOOL "Use shared-memory plugin." FORCE)
+    endif()
 endif()
 
 # Collect statistics
